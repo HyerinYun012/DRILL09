@@ -11,6 +11,7 @@ BACKGROUND_PATH = 'TUK_GROUND.png'
 CHARACTER_PATH = 'animation_sheet.png'
 
 FRAME_DELAY = 0.05
+MOVE_STEP = 5
 
 
 running = True
@@ -47,6 +48,17 @@ def handle_events():
                 pressed_keys.discard('down')
 
 
+def get_horizontal_move():
+    return int('right' in pressed_keys) - int('left' in pressed_keys)
+
+
+def update_horizontal_position():
+    global character_x
+
+    dx = get_horizontal_move()
+    character_x += dx * MOVE_STEP
+
+
 def draw_world(background, character):
     clear_canvas()
     background.draw(CANVAS_WIDTH // 2, CANVAS_HEIGHT // 2)
@@ -68,6 +80,7 @@ def main():
 
         while running:
             handle_events()
+            update_horizontal_position()
             draw_world(background, character)
             delay(FRAME_DELAY)
     finally:
