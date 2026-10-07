@@ -6,9 +6,14 @@ CANVAS_HEIGHT = 1024
 
 FRAME_WIDTH = 100
 FRAME_HEIGHT = 100
+FRAME_COUNT = 8
 IDLE_ROW_Y = {
     'right': 300,
     'left': 200,
+}
+RUN_ROW_Y = {
+    'right': 100,
+    'left': 0,
 }
 
 BACKGROUND_PATH = 'TUK_GROUND.png'
@@ -26,6 +31,7 @@ character_x = CANVAS_WIDTH // 2
 character_y = CANVAS_HEIGHT // 2
 facing = 'right'
 animation_state = STATE_IDLE
+animation_frame = 0
 pressed_keys = set()
 
 
@@ -79,13 +85,25 @@ def update_character():
     character_y += dy * MOVE_STEP
 
 
+def update_move_animation():
+    global animation_frame
+
+    if animation_state == STATE_MOVE:
+        animation_frame = (animation_frame + 1) % FRAME_COUNT
+
+
 def draw_world(background, character):
-    row_y = IDLE_ROW_Y[facing]
+    if animation_state == STATE_MOVE:
+        row_y = RUN_ROW_Y[facing]
+        frame = animation_frame
+    else:
+        row_y = IDLE_ROW_Y[facing]
+        frame = 0
 
     clear_canvas()
     background.draw(CANVAS_WIDTH // 2, CANVAS_HEIGHT // 2)
     character.clip_draw(
-        0, row_y, FRAME_WIDTH, FRAME_HEIGHT,
+        frame * FRAME_WIDTH, row_y, FRAME_WIDTH, FRAME_HEIGHT,
         character_x, character_y,
     )
     update_canvas()
@@ -103,6 +121,7 @@ def main():
         while running:
             handle_events()
             update_character()
+            update_move_animation()
             draw_world(background, character)
             delay(FRAME_DELAY)
     finally:
