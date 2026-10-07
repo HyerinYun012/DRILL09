@@ -17,11 +17,15 @@ CHARACTER_PATH = 'animation_sheet.png'
 FRAME_DELAY = 0.05
 MOVE_STEP = 5
 
+STATE_IDLE = 'idle'
+STATE_MOVE = 'move'
+
 
 running = True
 character_x = CANVAS_WIDTH // 2
 character_y = CANVAS_HEIGHT // 2
 facing = 'right'
+animation_state = STATE_IDLE
 pressed_keys = set()
 
 
@@ -59,8 +63,8 @@ def get_movement():
     return dx, dy
 
 
-def update_position():
-    global character_x, character_y, facing
+def update_character():
+    global character_x, character_y, facing, animation_state
 
     dx, dy = get_movement()
 
@@ -68,6 +72,8 @@ def update_position():
         facing = 'right'
     elif dx < 0:
         facing = 'left'
+
+    animation_state = STATE_MOVE if dx != 0 or dy != 0 else STATE_IDLE
 
     character_x += dx * MOVE_STEP
     character_y += dy * MOVE_STEP
@@ -96,7 +102,7 @@ def main():
 
         while running:
             handle_events()
-            update_position()
+            update_character()
             draw_world(background, character)
             delay(FRAME_DELAY)
     finally:
