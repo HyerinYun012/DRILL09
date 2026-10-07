@@ -88,10 +88,13 @@ def update_character():
     elif dx < 0:
         facing = 'left'
 
-    animation_state = STATE_MOVE if dx != 0 or dy != 0 else STATE_IDLE
+    next_x = clamp(character_x + dx * MOVE_STEP, MIN_X, MAX_X)
+    next_y = clamp(character_y + dy * MOVE_STEP, MIN_Y, MAX_Y)
+    position_changed = next_x != character_x or next_y != character_y
 
-    character_x = clamp(character_x + dx * MOVE_STEP, MIN_X, MAX_X)
-    character_y = clamp(character_y + dy * MOVE_STEP, MIN_Y, MAX_Y)
+    character_x = next_x
+    character_y = next_y
+    animation_state = STATE_MOVE if position_changed else STATE_IDLE
 
     return animation_state != previous_state
 
