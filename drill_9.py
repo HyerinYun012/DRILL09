@@ -16,6 +16,7 @@ FRAME_DELAY = 0.05
 running = True
 character_x = CANVAS_WIDTH // 2
 character_y = CANVAS_HEIGHT // 2
+pressed_keys = set()
 
 
 def handle_events():
@@ -24,8 +25,26 @@ def handle_events():
     for event in get_events():
         if event.type == SDL_QUIT:
             running = False
-        elif event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE:
-            running = False
+        elif event.type == SDL_KEYDOWN:
+            if event.key == SDLK_ESCAPE:
+                running = False
+            elif event.key == SDLK_LEFT:
+                pressed_keys.add('left')
+            elif event.key == SDLK_RIGHT:
+                pressed_keys.add('right')
+            elif event.key == SDLK_UP:
+                pressed_keys.add('up')
+            elif event.key == SDLK_DOWN:
+                pressed_keys.add('down')
+        elif event.type == SDL_KEYUP:
+            if event.key == SDLK_LEFT:
+                pressed_keys.discard('left')
+            elif event.key == SDLK_RIGHT:
+                pressed_keys.discard('right')
+            elif event.key == SDLK_UP:
+                pressed_keys.discard('up')
+            elif event.key == SDLK_DOWN:
+                pressed_keys.discard('down')
 
 
 def draw_world(background, character):
