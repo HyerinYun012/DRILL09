@@ -17,6 +17,7 @@ MOVE_STEP = 5
 running = True
 character_x = CANVAS_WIDTH // 2
 character_y = CANVAS_HEIGHT // 2
+facing = 'right'
 pressed_keys = set()
 
 
@@ -55,9 +56,15 @@ def get_movement():
 
 
 def update_position():
-    global character_x, character_y
+    global character_x, character_y, facing
 
     dx, dy = get_movement()
+
+    if dx > 0:
+        facing = 'right'
+    elif dx < 0:
+        facing = 'left'
+
     character_x += dx * MOVE_STEP
     character_y += dy * MOVE_STEP
 
