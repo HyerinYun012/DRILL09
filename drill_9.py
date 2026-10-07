@@ -48,15 +48,18 @@ def handle_events():
                 pressed_keys.discard('down')
 
 
-def get_horizontal_move():
-    return int('right' in pressed_keys) - int('left' in pressed_keys)
+def get_movement():
+    dx = int('right' in pressed_keys) - int('left' in pressed_keys)
+    dy = int('up' in pressed_keys) - int('down' in pressed_keys)
+    return dx, dy
 
 
-def update_horizontal_position():
-    global character_x
+def update_position():
+    global character_x, character_y
 
-    dx = get_horizontal_move()
+    dx, dy = get_movement()
     character_x += dx * MOVE_STEP
+    character_y += dy * MOVE_STEP
 
 
 def draw_world(background, character):
@@ -80,7 +83,7 @@ def main():
 
         while running:
             handle_events()
-            update_horizontal_position()
+            update_position()
             draw_world(background, character)
             delay(FRAME_DELAY)
     finally:
