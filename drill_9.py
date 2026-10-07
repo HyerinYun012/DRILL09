@@ -6,6 +6,10 @@ CANVAS_HEIGHT = 1024
 
 FRAME_WIDTH = 100
 FRAME_HEIGHT = 100
+IDLE_ROW_Y = {
+    'right': 300,
+    'left': 200,
+}
 
 BACKGROUND_PATH = 'TUK_GROUND.png'
 CHARACTER_PATH = 'animation_sheet.png'
@@ -70,10 +74,12 @@ def update_position():
 
 
 def draw_world(background, character):
+    row_y = IDLE_ROW_Y[facing]
+
     clear_canvas()
     background.draw(CANVAS_WIDTH // 2, CANVAS_HEIGHT // 2)
     character.clip_draw(
-        0, 300, FRAME_WIDTH, FRAME_HEIGHT,
+        0, row_y, FRAME_WIDTH, FRAME_HEIGHT,
         character_x, character_y,
     )
     update_canvas()
