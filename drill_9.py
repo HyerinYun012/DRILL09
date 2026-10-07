@@ -7,6 +7,10 @@ CANVAS_HEIGHT = 1024
 FRAME_WIDTH = 100
 FRAME_HEIGHT = 100
 FRAME_COUNT = 8
+MIN_X = FRAME_WIDTH // 2
+MAX_X = CANVAS_WIDTH - FRAME_WIDTH // 2
+MIN_Y = FRAME_HEIGHT // 2
+MAX_Y = CANVAS_HEIGHT - FRAME_HEIGHT // 2
 IDLE_ROW_Y = {
     'right': 300,
     'left': 200,
@@ -69,6 +73,10 @@ def get_movement():
     return dx, dy
 
 
+def clamp(value, minimum, maximum):
+    return max(minimum, min(value, maximum))
+
+
 def update_character():
     global character_x, character_y, facing, animation_state
 
@@ -82,8 +90,8 @@ def update_character():
 
     animation_state = STATE_MOVE if dx != 0 or dy != 0 else STATE_IDLE
 
-    character_x += dx * MOVE_STEP
-    character_y += dy * MOVE_STEP
+    character_x = clamp(character_x + dx * MOVE_STEP, MIN_X, MAX_X)
+    character_y = clamp(character_y + dy * MOVE_STEP, MIN_Y, MAX_Y)
 
     return animation_state != previous_state
 
