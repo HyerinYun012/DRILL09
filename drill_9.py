@@ -7,10 +7,15 @@ CANVAS_HEIGHT = 1024
 FRAME_WIDTH = 100
 FRAME_HEIGHT = 100
 FRAME_COUNT = 8
+VISIBLE_BOTTOM_Y = 13
+VISIBLE_TOP_Y = 92
+VERTICAL_EDGE_PADDING = 1
+FOOT_OFFSET_Y = VISIBLE_BOTTOM_Y - FRAME_HEIGHT // 2
+HEAD_OFFSET_Y = VISIBLE_TOP_Y - FRAME_HEIGHT // 2
 MIN_X = FRAME_WIDTH // 2
 MAX_X = CANVAS_WIDTH - FRAME_WIDTH // 2
-MIN_Y = FRAME_HEIGHT // 2
-MAX_Y = CANVAS_HEIGHT - FRAME_HEIGHT // 2
+MIN_Y = VERTICAL_EDGE_PADDING - FOOT_OFFSET_Y
+MAX_Y = CANVAS_HEIGHT - VERTICAL_EDGE_PADDING - HEAD_OFFSET_Y
 IDLE_ROW_Y = {
     'right': 300,
     'left': 200,
@@ -77,6 +82,19 @@ def clamp(value, minimum, maximum):
     return max(minimum, min(value, maximum))
 
 
+def get_bounded_vertical_position(dy):
+    next_y = character_y + dy * MOVE_STEP
+    next_foot_y = next_y + FOOT_OFFSET_Y
+    next_head_y = next_y + HEAD_OFFSET_Y
+
+    if dy < 0 and next_foot_y <= VERTICAL_EDGE_PADDING:
+        return MIN_Y
+    if dy > 0 and next_head_y >= CANVAS_HEIGHT - VERTICAL_EDGE_PADDING:
+        return MAX_Y
+
+    return next_y
+
+
 def update_character():
     global character_x, character_y, facing, animation_state
 
@@ -89,7 +107,7 @@ def update_character():
         facing = 'left'
 
     next_x = clamp(character_x + dx * MOVE_STEP, MIN_X, MAX_X)
-    next_y = clamp(character_y + dy * MOVE_STEP, MIN_Y, MAX_Y)
+    next_y = get_bounded_vertical_position(dy)
     position_changed = next_x != character_x or next_y != character_y
 
     character_x = next_x
