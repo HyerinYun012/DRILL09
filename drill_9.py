@@ -7,15 +7,11 @@ CANVAS_HEIGHT = 1024
 FRAME_WIDTH = 100
 FRAME_HEIGHT = 100
 FRAME_COUNT = 8
-VISIBLE_BOTTOM_Y = 13
-VISIBLE_TOP_Y = 92
 VERTICAL_EDGE_PADDING = 1
-FOOT_OFFSET_Y = VISIBLE_BOTTOM_Y - FRAME_HEIGHT // 2
-HEAD_OFFSET_Y = VISIBLE_TOP_Y - FRAME_HEIGHT // 2
 MIN_X = FRAME_WIDTH // 2
 MAX_X = CANVAS_WIDTH - FRAME_WIDTH // 2
-MIN_Y = VERTICAL_EDGE_PADDING - FOOT_OFFSET_Y
-MAX_Y = CANVAS_HEIGHT - VERTICAL_EDGE_PADDING - HEAD_OFFSET_Y
+MIN_Y = FRAME_HEIGHT // 2 + VERTICAL_EDGE_PADDING
+MAX_Y = CANVAS_HEIGHT - FRAME_HEIGHT // 2 - VERTICAL_EDGE_PADDING
 IDLE_ROW_Y = {
     'right': 300,
     'left': 200,
@@ -84,12 +80,12 @@ def clamp(value, minimum, maximum):
 
 def get_bounded_vertical_position(dy):
     next_y = character_y + dy * MOVE_STEP
-    next_foot_y = next_y + FOOT_OFFSET_Y
-    next_head_y = next_y + HEAD_OFFSET_Y
+    next_bottom_y = next_y - FRAME_HEIGHT // 2
+    next_top_y = next_y + FRAME_HEIGHT // 2
 
-    if dy < 0 and next_foot_y <= VERTICAL_EDGE_PADDING:
+    if dy < 0 and next_bottom_y <= VERTICAL_EDGE_PADDING:
         return MIN_Y
-    if dy > 0 and next_head_y >= CANVAS_HEIGHT - VERTICAL_EDGE_PADDING:
+    if dy > 0 and next_top_y >= CANVAS_HEIGHT - VERTICAL_EDGE_PADDING:
         return MAX_Y
 
     return next_y
