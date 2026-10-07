@@ -131,6 +131,9 @@ def main():
 
         while running:
             handle_events()
+            if not running:
+                break
+
             state_changed = update_character()
             update_animation(state_changed)
             draw_world(background, character)
