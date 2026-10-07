@@ -73,6 +73,7 @@ def update_character():
     global character_x, character_y, facing, animation_state
 
     dx, dy = get_movement()
+    previous_state = animation_state
 
     if dx > 0:
         facing = 'right'
@@ -84,11 +85,16 @@ def update_character():
     character_x += dx * MOVE_STEP
     character_y += dy * MOVE_STEP
 
+    return animation_state != previous_state
 
-def update_animation():
+
+def update_animation(state_changed):
     global animation_frame
 
-    animation_frame = (animation_frame + 1) % FRAME_COUNT
+    if state_changed:
+        animation_frame = 0
+    else:
+        animation_frame = (animation_frame + 1) % FRAME_COUNT
 
 
 def draw_world(background, character):
@@ -117,8 +123,8 @@ def main():
 
         while running:
             handle_events()
-            update_character()
-            update_animation()
+            state_changed = update_character()
+            update_animation(state_changed)
             draw_world(background, character)
             delay(FRAME_DELAY)
     finally:
